@@ -1,240 +1,162 @@
-/* ======================
-   Global
-====================== */
-
+/* ==========================================
+   1. 初始化與全域設定 (Global)
+   ========================================== */
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
-    font-family:
-        "Noto Sans TC",
-        "Hiragino Sans",
-        "Yu Gothic",
-        sans-serif;
-
-    background-color: #f8f5ef;
-    color: #4b433c;
+    font-family: "Noto Sans TC", "Hiragino Sans", "Yu Gothic", Arial, sans-serif;
+    background-color: #f8f5ef; /* 你的暖米白底色 */
+    color: #4b433c;            /* 你的深褐字體 */
     line-height: 1.8;
+    display: flex;
+    flex-direction: column;    /* 改為縱向排列，確保導覽列在最上方，主內容在下方 */
+    align-items: center;
+    min-height: 100vh;
 }
 
-/* ======================
-   Header
-====================== */
-
-header {
+/* 主外殼限制最大寬度並居中 */
+.wrapper {
+    max-width: 1200px;
+    width: 100%;
     text-align: center;
-    padding: 60px 20px;
-    background: #ebe4d7;
-    border-bottom: 1px solid #d8cfbf;
+    padding: 60px 20px;       /* 增加上下留白，避免黏到頂部導覽 */
 }
 
-h1 {
-    margin: 0;
-    font-size: 2.5rem;
-    font-weight: 500;
-    color: #3e352d;
-}
-
-header p {
-    margin-top: 16px;
-    color: #6d6258;
-    font-style: italic;
-}
-
-/* ======================
-   Navigation
-====================== */
-
+/* ==========================================
+   2. 頂部導覽列 (Navigation - 丟到最上面)
+   ========================================== */
 nav {
-    margin-top: 30px;
+    width: 100%;               /* 寬度撐滿整個網頁螢幕 */
+    background: #ebe4d7;       /* 搭配你原本設定的 header 暖米色背景 */
+    text-align: center;        /* 讓文字選單置中 */
+    padding: 16px 20px;        /* 上下配點呼吸空間 */
+    border-bottom: 1px solid #d8cfbf; /* 你的文青外框線 */
 }
 
 nav a {
-    color: #5b5148;
-    text-decoration: none;
-    margin: 0 12px;
-    padding-bottom: 4px;
+    color: #5b5148;            /* 你的文青文字色 */
+    text-decoration: none;     /* 去除超連結藍色下底線 */
+    margin: 0 20px;            /* 讓選項之間左右拉開舒適距離 */
+    padding-bottom: 6px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: inline-block;     /* 確保橫向並排 */
     transition: 0.2s;
 }
 
+/* 滑鼠移過去變綠色，並有綠色底線 */
 nav a:hover {
-    color: #6f8c61;
+    color: #6f8c61;            /* 你的文青綠 */
     border-bottom: 2px solid #6f8c61;
 }
 
-/* ======================
-   Main Layout
-====================== */
-
-main {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 0 20px;
+/* ==========================================
+   3. 上方標題與文字區塊
+   ========================================== */
+.header-section {
+    margin-bottom: 48px;
 }
 
-section {
-    margin-bottom: 32px;
-    padding: 32px;
-    background: white;
-    border-radius: 16px;
-    border: 1px solid #e6dfd3;
+.main-title {
+    font-size: 3rem;           
+    font-weight: 500;
+    color: #3e352d;            
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
 }
 
-/* ======================
-   Titles
-====================== */
-
-h2 {
-    margin-top: 0;
-    color: #4b433c;
-    border-left: 4px solid #7c9a6d;
-    padding-left: 12px;
+.intro-text {
+    font-size: 1.2rem;
+    color: #6d6258;            
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 960px;
+    margin: 0 auto;
+    word-break: break-all;
 }
 
-h3 {
-    color: #5c5146;
+/* ==========================================
+   4. 三欄卡片佈局與樣式
+   ========================================== */
+.grid-container {
+    display: flex;
+    justify-content: center;
+    gap: 28px;                 
+    margin-bottom: 80px;
 }
 
-/* ======================
-   Article Card
-====================== */
-
-article {
-    padding: 20px;
-    margin-top: 20px;
-    background: #faf8f3;
-    border-radius: 12px;
-    border: 1px solid #ece5d8;
-}
-
-/* ======================
-   Links
-====================== */
-
-a {
-    color: #6f8c61;
-}
-
-a:hover {
-    color: #567049;
-}
-
-/* ======================
-   Form
-====================== */
-
-form {
-    padding: 20px;
-    margin: 20px 0;
-    background: #faf8f3;
-    border-radius: 12px;
-    border: 1px solid #e6dfd3;
-}
-
-/* ======================
-   Button
-====================== */
-
-button {
-    background: #7c9a6d;
-    color: white;
-    border: none;
-    padding: 12px 22px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: 0.2s;
-}
-
-button:hover {
-    background: #688259;
-}
-
-button:active {
-    transform: scale(0.98);
-}
-
-/* ======================
-   Input
-====================== */
-
-input,
-textarea,
-select {
-    width: 100%;
-    padding: 12px;
-    margin-top: 6px;
-    margin-bottom: 12px;
-
-    border: 1px solid #d8cfbf;
-    border-radius: 8px;
-
-    background: white;
-    color: #4b433c;
-}
-
-/* ======================
-   Lists
-====================== */
-
-ul {
-    padding-left: 24px;
-}
-
-li {
-    margin-bottom: 8px;
-}
-
-/* ======================
-   Table
-====================== */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th,
-td {
-    padding: 12px;
-    border-bottom: 1px solid #e6dfd3;
-    text-align: left;
-}
-
-th {
-    background: #f2eee6;
-}
-
-/* ======================
-   Footer
-====================== */
-
-footer {
+.feature-card {
+    background: #ffffff;
+    flex: 1;
+    max-width: 360px;          
+    padding: 40px 24px;
+    border-radius: 16px;       /* 你的 16px 完美圓角 */
+    border: 1px solid #e6dfd3; 
     text-align: center;
-    padding: 30px;
-    color: #7b7268;
-    border-top: 1px solid #ddd3c3;
-    margin-top: 60px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s;
+    cursor: pointer;
 }
 
-/* ======================
-   Mobile
-====================== */
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: #7c9a6d;     
+    box-shadow: 0 12px 20px rgba(124, 154, 109, 0.1); 
+}
 
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #3e352d;            
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f2eee6; 
+}
+
+.card-desc {
+    font-size: 1rem;
+    color: #6d6258;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+/* ==========================================
+   5. 頁尾與版本號
+   ========================================== */
+.footer-section {
+    margin-top: 20px;
+}
+
+.version-info {
+    font-size: 1.1rem;
+    color: #7b7268;            
+}
+
+/* ==========================================
+   6. 響應式手機板優化
+   ========================================== */
 @media (max-width: 768px) {
-
-    h1 {
+    .main-title {
         font-size: 2rem;
     }
 
-    section {
-        padding: 24px;
+    .grid-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .feature-card {
+        max-width: 100%;
+        width: 100%;
     }
 
     nav a {
-        display: inline-block;
-        margin: 8px;
+        margin: 8px 12px;
+        font-size: 1rem;
     }
 }
