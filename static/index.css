@@ -100,6 +100,7 @@ nav a:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .feature-card:hover {

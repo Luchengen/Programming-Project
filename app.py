@@ -5,6 +5,9 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from urllib.parse import urljoin
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 import os
 import requests
@@ -32,10 +35,6 @@ with app.app_context():
 @app.route("/")
 def home():
     return render_template("home.html")
-
-@app.route("/html_tags")
-def html_tags():
-    return render_template("html_tags.html")
 
 @app.route("/todo")
 def todo():
@@ -153,6 +152,119 @@ def quotes():
         "quotes.html",
         quote_list=quote_list
     )
+
+@app.route("/garena-news")
+def garena_news():
+    url = "https://moba.garena.tw/"
+
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    driver = webdriver.Chrome(options=options)
+
+    news_list = []
+
+    try:
+        driver.get(url)
+
+        html = driver.page_source
+        soup = BeautifulSoup(html, "html.parser")
+
+        news_items = soup.select(".tab_list li a")
+
+        for item in news_items:
+            icon = item.select_one(".tab_icon")
+            title = item.select_one(".tab_title")
+            date = item.select_one(".tab_date")
+            link = item.get("href")
+
+            news_list.append({
+                "icon": icon.get_text(strip=True) if icon else "",
+                "title": title.get_text(strip=True) if title else "",
+                "date": date.get_text(strip=True) if date else "",
+                "link": urljoin(url, link) if link else "#"
+            })
+
+    finally:
+        driver.quit()
+
+    return render_template("garena_news.html", news_list=news_list)
+
+@app.route("/aov-skins")
+def aov_skins():
+    url = "https://aovweb.azurewebsites.net/HeroSkin/News"
+
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--user-agent=Mozilla/5.0")
+
+    driver = webdriver.Chrome(options=options)
+
+    skins = []
+
+    try:
+        driver.get(url)
+
+        try:
+            WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".skin-card"))
+            )
+        except:
+            driver.refresh()
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".skin-card"))
+            )
+
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+
+        for card in soup.select(".skin-card"):
+            img = card.select_one("img")
+
+            skin = {
+                "image": img.get("src") if img else "",
+                "hero": "",
+                "skin_name": "",
+                "first_time": "",
+                "method": "",
+                "promotion": []
+            }
+
+            promotion_detail = card.select_one(".promotion-detail")
+
+            for div in card.find_all("div", recursive=False):
+                if div == promotion_detail:
+                    continue
+
+                text = div.get_text(strip=True)
+
+                if text.startswith("英雄："):
+                    skin["hero"] = text.replace("英雄：", "")
+                elif text.startswith("造型："):
+                    skin["skin_name"] = text.replace("造型：", "")
+                elif text.startswith("首次上架時間："):
+                    skin["first_time"] = text.replace("首次上架時間：", "")
+                elif text.startswith("獲取方式："):
+                    skin["method"] = text.replace("獲取方式：", "")
+
+            if promotion_detail:
+                skin["promotion"] = [
+                    div.get_text(strip=True)
+                    for div in promotion_detail.select("div")
+                ]
+
+            skins.append(skin)
+
+    finally:
+        driver.quit()
+
+    return render_template("aov_skins.html", skins=skins)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

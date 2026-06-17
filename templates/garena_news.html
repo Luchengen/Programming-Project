@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>Garena 傳說對決新聞</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+    {% extends "navbar.html" %}
+
+    {% block content %}
+    <h1>Garena 傳說對決新聞</h1>
+
+    {% if news_list %}
+        <ul>
+            {% for news in news_list %}
+                <li>
+                    <span>[{{ news.icon }}]</span>
+
+                    <a href="{{ news.link }}" target="_blank">
+                        {{ news.title }}
+                    </a>
+
+                    <span>{{ news.date }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>目前沒有抓到新聞資料。</p>
+    {% endif %}
+    <div style="margin-top: 50px;">
+            <button onclick="window.location.href='/'" style="background: #7c9a6d; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">返回首頁</button>
+        </div>
+{% endblock %}
+</body>
+</html>
