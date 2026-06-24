@@ -9,15 +9,20 @@ from urllib.parse import urljoin
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+import json
+import re
 import os
 import requests
+import time
 
 load_dotenv()
 
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL") or "sqlite:///instance/todo.db"
+
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
@@ -30,7 +35,10 @@ class Todo(db.Model):
     )
 
 with app.app_context():
-    db.create_all()
+    try:
+        db.create_all()
+    except Exception:
+        db.session.remove()
 
 @app.route("/")
 def home():
@@ -78,83 +86,8 @@ def update_todo(id):
 
     return redirect("/todo")
 
-@app.route("/news")
-def news():
-
-    url = "https://news.ycombinator.com/"
-
-    response = requests.get(url)
-
-    soup = BeautifulSoup(
-        response.text,
-        "html.parser"
-    )
-
-    titles = soup.select(".titleline a")
-
-    result = ""
-
-    news_list = []
-
-    for title in titles:
-
-        news_list.append({
-            "title": title.text,
-            "url": title["href"]
-        })
-
-    return render_template(
-        "news.html",
-        news_list=news_list
-    )
-
-@app.route("/quotes")
-def quotes():
-    options = Options()
-    options.binary_location = "/usr/bin/chromium"
-    options.add_argument("--headless=new")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-
-    driver = webdriver.Chrome(options=options)
-
-    try:
-        driver.get("https://quotes.toscrape.com/js/")
-
-        quote_elements = driver.find_elements(
-            By.CLASS_NAME,
-            "quote"
-        )
-
-        quote_list = []
-
-        for quote in quote_elements:
-
-            text = quote.find_element(
-                By.CLASS_NAME,
-                "text"
-            ).text
-
-            author = quote.find_element(
-                By.CLASS_NAME,
-                "author"
-            ).text
-
-            quote_list.append({
-                "text": text,
-                "author": author
-            })
-    finally:
-        driver.quit()
-
-        return render_template(
-        "quotes.html",
-        quote_list=quote_list
-    )
-
-@app.route("/garena-news")
-def garena_news():
+@app.route("/garena_aov_news")
+def garena_aov_news():
     url = "https://moba.garena.tw/"
 
     options = Options()
@@ -191,11 +124,12 @@ def garena_news():
     finally:
         driver.quit()
 
-    return render_template("garena_news.html", news_list=news_list)
+    return render_template("garena_aov_news.html", news_list=news_list)
 
-@app.route("/aov-skins")
-def aov_skins():
-    url = "https://aovweb.azurewebsites.net/HeroSkin/News"
+@app.route("/garena_delta_news")
+def garena_delta_news():
+
+    url = "https://deltaforce.garena.com/zh_tw/news/all"
 
     options = Options()
     options.add_argument("--headless=new")
@@ -207,64 +141,153 @@ def aov_skins():
 
     driver = webdriver.Chrome(options=options)
 
-    skins = []
-
     try:
         driver.get(url)
-
-        try:
-            WebDriverWait(driver, 5).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, ".skin-card"))
-            )
-        except:
-            driver.refresh()
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, ".skin-card"))
-            )
+        time.sleep(3)
 
         soup = BeautifulSoup(driver.page_source, "html.parser")
+        news_items = soup.select("a.category-list-item")
 
-        for card in soup.select(".skin-card"):
-            img = card.select_one("img")
+        news_list = [
+            {
+                "title": item.select_one(".info__title").get_text(strip=True)
+                if item.select_one(".info__title") else "",
 
-            skin = {
-                "image": img.get("src") if img else "",
-                "hero": "",
-                "skin_name": "",
-                "first_time": "",
-                "method": "",
-                "promotion": []
+                "date": item.select_one(".info__date").get_text(strip=True)
+                if item.select_one(".info__date") else "",
+
+                "summary": item.select_one(".info__summary").get_text(strip=True)
+                if item.select_one(".info__summary") else "",
+
+                "image": item.select_one("img").get("src")
+                if item.select_one("img") else "",
+
+                "link": urljoin(
+                    url,
+                    item.get("href") if item.get("href") else ""
+                )
             }
-
-            promotion_detail = card.select_one(".promotion-detail")
-
-            for div in card.find_all("div", recursive=False):
-                if div == promotion_detail:
-                    continue
-
-                text = div.get_text(strip=True)
-
-                if text.startswith("英雄："):
-                    skin["hero"] = text.replace("英雄：", "")
-                elif text.startswith("造型："):
-                    skin["skin_name"] = text.replace("造型：", "")
-                elif text.startswith("首次上架時間："):
-                    skin["first_time"] = text.replace("首次上架時間：", "")
-                elif text.startswith("獲取方式："):
-                    skin["method"] = text.replace("獲取方式：", "")
-
-            if promotion_detail:
-                skin["promotion"] = [
-                    div.get_text(strip=True)
-                    for div in promotion_detail.select("div")
-                ]
-
-            skins.append(skin)
+            for item in news_items
+        ]
 
     finally:
         driver.quit()
 
-    return render_template("aov_skins.html", skins=skins)
+    return render_template("garena_delta_news.html", news_list=news_list)
+
+@app.route("/garena_codm_news")
+def garena_codm_news():
+    url = "https://codm.garena.tw/"
+
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    driver = webdriver.Chrome(options=options)
+
+    news_list = []
+
+    try:
+        driver.get(url)
+
+        html = driver.page_source
+        soup = BeautifulSoup(html, "html.parser")
+
+        # ✅ 這裡是 CODM Swiper 重點
+        container = soup.select_one("#news_list")
+
+        if container:
+            links = container.find_all("a")
+            dates = container.find_all("span", class_="news_date")
+
+            for a, d in zip(links, dates):
+                title = a.get_text(strip=True)
+                href = a.get("href")
+                date = d.get_text(strip=True)
+
+                news_list.append({
+                    "title": title,
+                    "date": date,
+                    "link": urljoin(url, href)
+                })
+
+        # ✅ 去重（Swiper 會重複 slide）
+        seen = set()
+        unique_news = []
+
+        for item in news_list:
+            if item["link"] not in seen:
+                unique_news.append(item)
+                seen.add(item["link"])
+
+        news_list = unique_news
+
+    finally:
+        driver.quit()
+
+    return render_template("garena_codm_news.html", news_list=news_list)
+
+@app.route("/garena_ff_news")
+def garena_ff_news():
+    url = "https://ff.garena.com/zh/news/"
+
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    driver = webdriver.Chrome(options=options)
+
+    news_list = []
+
+    try:
+        driver.get(url)
+
+        html = driver.page_source
+        soup = BeautifulSoup(html, "html.parser")
+
+        # ✅ 這個是你給的結構重點
+        items = soup.select(".news-list .news-item")
+
+        for item in items:
+            a_tag = item.select_one("a.news-link")
+
+            if not a_tag:
+                continue
+
+            title = item.select_one(".news-title")
+            date = item.select_one(".news-time")
+            category = item.select_one(".news-category")
+            img = item.select_one("img")
+
+            link = a_tag.get("href")
+
+            news_list.append({
+                "title": title.get_text(strip=True) if title else "",
+                "date": date.get_text(strip=True) if date else "",
+                "category": category.get_text(strip=True) if category else "",
+                "img": img.get("src") if img else "",
+                "link": urljoin(url, link) if link else "#"
+            })
+
+        # ✅ 去重（避免重複 API / DOM重複）
+        seen = set()
+        unique = []
+
+        for n in news_list:
+            if n["link"] not in seen:
+                unique.append(n)
+                seen.add(n["link"])
+
+        news_list = unique
+
+    finally:
+        driver.quit()
+
+    return render_template("garena_ff_news.html", news_list=news_list)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>歡迎來到傳說對決排行榜</title>
+    <title>傳說對決和三角洲行動</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 </head>
@@ -14,26 +14,31 @@
     {% block content %}
     <div class="wrapper">
         <div class="header-section">
-            <h1 class="main-title">傳說對決排行榜</h1>
+            <h1 class="main-title">Garena新聞網</h1>
             <p class="intro-text">
-                提供查詢傳說對決的英雄數據、各服出裝排行、玩家資訊、歷史戰機、天梯排行榜等功能，幫助對出裝沒有想法，或是想嘗試不同套路的您。
+                提供查詢有關Garena遊戲的各個新聞
             </p>
         </div>
 
         <div class="grid-container">
-            <a href="#" class="feature-card">
-                <h2 class="card-title">查英雄、裝備排行</h2>
-                <p class="card-desc">隨時更新英雄相關數值、以及各國頂尖玩家的出裝排行</p>
+            <a href="{{ url_for('garena_aov_news') }}" class="feature-card">
+                <h2 class="card-title">AOV</h2>
+                <p class="card-desc">隨時更新有關傳說對決的各種新聞</p>
             </a>
 
-            <a href="#" class="feature-card">
-                <h2 class="card-title">查玩家、查戰績</h2>
-                <p class="card-desc">查詢玩家的常用英雄或對戰資料等資訊</p>
+            <a href="{{ url_for('garena_delta_news') }}" class="feature-card">
+                <h2 class="card-title">DELTA FORCE</h2>
+                <p class="card-desc">隨時更新有關三角洲行動的各種新聞</p>
             </a>
 
-            <a href="#" class="feature-card">
-                <h2 class="card-title">查排行榜</h2>
-                <p class="card-desc">查詢排位賽/英雄全服排行</p>
+            <a href="{{ url_for('garena_codm_news') }}" class="feature-card">
+                <h2 class="card-title">CALL OF DUTY</h2>
+                <p class="card-desc">隨時更新有關決勝時刻的各種新聞</p>
+            </a>
+
+             <a href="{{ url_for('garena_ff_news') }}" class="feature-card">
+                <h2 class="card-title">FREE FIRE</h2>
+                <p class="card-desc">隨時更新有關我要活下去的各種新聞</p>
             </a>
         </div>
 

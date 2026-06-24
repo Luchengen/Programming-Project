@@ -1,6 +1,6 @@
 services:
   flask-mvp:
-    build: .
+    build: .  
     container_name: flask-mvp
     ports:
       - "5000:5000"
