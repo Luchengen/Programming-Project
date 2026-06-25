@@ -1,0 +1,58 @@
+body{
+    background: linear-gradient(135deg,#0b1114,#152126);
+    color:#e6e6e6;
+    font-family:"Microsoft JhengHei",sans-serif;
+}
+
+h1{
+    text-align:center;
+    color:#78ff8f;
+    margin:30px;
+    text-shadow:0 0 15px #78ff8f;
+}
+
+ul{
+    width:80%;
+    margin:auto;
+    list-style:none;
+}
+
+li{
+    background:#1a2428;
+    margin:15px 0;
+    padding:20px;
+    border-left:5px solid #78ff8f;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+li:hover{
+    transform:translateX(10px);
+    box-shadow:0 0 20px rgba(120,255,143,.4);
+}
+
+a{
+    color:#78ff8f;
+    text-decoration:none;
+    font-size:18px;
+    font-weight:bold;
+}
+
+a:hover{
+    color:white;
+}
+
+span{
+    float:right;
+    color:#aaa;
+}
+
+body{
+    background:
+        linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),
+        url("images/delta-bg.jpg");
+
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}

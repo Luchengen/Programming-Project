@@ -195,7 +195,6 @@ def garena_codm_news():
         html = driver.page_source
         soup = BeautifulSoup(html, "html.parser")
 
-        # ✅ 這裡是 CODM Swiper 重點
         container = soup.select_one("#news_list")
 
         if container:
@@ -213,7 +212,6 @@ def garena_codm_news():
                     "link": urljoin(url, href)
                 })
 
-        # ✅ 去重（Swiper 會重複 slide）
         seen = set()
         unique_news = []
 
@@ -249,7 +247,6 @@ def garena_ff_news():
         html = driver.page_source
         soup = BeautifulSoup(html, "html.parser")
 
-        # ✅ 這個是你給的結構重點
         items = soup.select(".news-list .news-item")
 
         for item in items:
@@ -273,7 +270,6 @@ def garena_ff_news():
                 "link": urljoin(url, link) if link else "#"
             })
 
-        # ✅ 去重（避免重複 API / DOM重複）
         seen = set()
         unique = []
 

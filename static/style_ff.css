@@ -1,0 +1,76 @@
+body{
+    background:#111;
+    color:white;
+    font-family:"Microsoft JhengHei",sans-serif;
+}
+
+h1{
+    text-align:center;
+    color:#ff9900;
+    margin:30px;
+    text-shadow:0 0 20px orange;
+}
+
+ul{
+    width:80%;
+    margin:auto;
+    list-style:none;
+}
+
+li{
+    background:#1c1c1c;
+    margin:15px 0;
+    padding:20px;
+    border-radius:15px;
+    border:2px solid #ff9900;
+    transition:.3s;
+}
+
+li:hover{
+    transform:scale(1.03);
+    box-shadow:0 0 25px orange;
+}
+
+a{
+    color:#ffd166;
+    font-size:18px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+a:hover{
+    color:white;
+}
+
+span{
+    float:right;
+    color:#ccc;
+}
+
+button{
+    background:linear-gradient(45deg,#ff6600,#ffcc00);
+    color:black;
+    font-weight:bold;
+}
+
+body{
+    background:
+        linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)),
+        url("images/freefire-bg.jpg");
+
+    background-size:cover;
+    background-position:center;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+
+    background:
+        radial-gradient(circle,
+        rgba(255,140,0,.15),
+        transparent);
+
+    pointer-events:none;
+}

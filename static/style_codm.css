@@ -1,0 +1,84 @@
+body{
+    background:#0d0d0d;
+    color:#f5f5f5;
+    font-family:"Segoe UI",sans-serif;
+}
+
+h1{
+    text-align:center;
+    margin:30px;
+    color:#d4af37;
+    letter-spacing:3px;
+    text-transform:uppercase;
+}
+
+ul{
+    width:85%;
+    margin:auto;
+    list-style:none;
+}
+
+li{
+    background:#1b1b1b;
+    margin:15px 0;
+    padding:20px;
+    border:1px solid #444;
+    border-radius:10px;
+    transition:.3s;
+}
+
+li:hover{
+    border-color:#d4af37;
+    box-shadow:0 0 20px rgba(212,175,55,.3);
+}
+
+a{
+    color:#d4af37;
+    text-decoration:none;
+    font-size:18px;
+    font-weight:600;
+}
+
+a:hover{
+    color:white;
+}
+
+span{
+    float:right;
+    color:#999;
+}
+
+button{
+    background:#d4af37;
+    color:black;
+    border:none;
+    padding:12px 30px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+body{
+    background:
+        linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),
+        url("images/cod-bg.jpg");
+
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+
+body::after{
+    content:"";
+
+    position:fixed;
+    inset:0;
+
+    background:
+    repeating-linear-gradient(
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,.02) 3px
+    );
+
+    pointer-events:none;
+}
