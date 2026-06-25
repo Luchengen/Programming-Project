@@ -50,9 +50,10 @@ span{
 body{
     background:
         linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),
-        url("images/delta-bg.jpg");
+        url("https://i.pinimg.com/736x/2d/50/06/2d50065c02b3d11d6fcb920eaa05dfc3.jpg");
 
     background-size:cover;
     background-position:center;
     background-attachment:fixed;
+    padding: 40px 20px;
 }

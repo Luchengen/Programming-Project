@@ -60,11 +60,12 @@ button{
 body{
     background:
         linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),
-        url("images/cod-bg.jpg");
+        url("https://i.pinimg.com/736x/c8/f5/bf/c8f5bf7326e32d8adcab40c42d87f01d.jpg");
 
     background-size:cover;
     background-position:center;
     background-attachment:fixed;
+    padding: 40px 20px;
 }
 
 body::after{
