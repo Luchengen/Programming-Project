@@ -26,65 +26,9 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-
-    content = db.Column(
-        db.String(200),
-        nullable=False
-    )
-
-with app.app_context():
-    try:
-        db.create_all()
-    except Exception:
-        db.session.remove()
-
 @app.route("/")
 def home():
     return render_template("home.html")
-
-@app.route("/todo")
-def todo():
-
-    todos = Todo.query.all()
-
-    return render_template(
-        "todo.html",
-        todos=todos
-    )
-
-@app.route("/add", methods=["POST"])
-def add_todo():
-
-    content = request.form.get("content")
-
-    if content:
-
-        new_todo = Todo(content=content)
-
-        db.session.add(new_todo)
-
-        db.session.commit()
-
-    return redirect("/todo")
-
-@app.route("/update/<int:id>", methods=["POST"])
-def update_todo(id):
-
-    todo = Todo.query.get(id)
-
-    if todo:
-
-        new_content = request.form.get("content")
-
-        if new_content:
-
-            todo.content = new_content
-
-            db.session.commit()
-
-    return redirect("/todo")
 
 @app.route("/garena_aov_news")
 def garena_aov_news():
