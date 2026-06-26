@@ -26,6 +26,20 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    content = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+with app.app_context():
+    try:
+        db.create_all()
+    except Exception:
+        db.session.remove()
+
 @app.route("/")
 def home():
     return render_template("home.html")
